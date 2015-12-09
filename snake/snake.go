@@ -10,6 +10,7 @@ const (
 type Snake struct {
 	Body      [][]int
 	Direction int
+	Alive     bool
 }
 
 func (s *Snake) ChangeDirection(d int) {
@@ -40,4 +41,8 @@ func (s *Snake) Move() {
 	}
 
 	s.Body = append(s.Body[1:], h)
+}
+
+func (s *Snake) Die() {
+	s.Alive = false
 }

@@ -5,6 +5,7 @@ import "testing"
 func NewDoubleSnake(d int) Snake {
 	return Snake{
 		Direction: d,
+		Alive:     true,
 		Body:      [][]int{{1, 2}, {1, 3}, {1, 4}},
 	}
 }
@@ -75,5 +76,13 @@ func TestChangeDirectionToOposity(t *testing.T) {
 	snake.ChangeDirection(LEFT)
 	if snake.Direction == LEFT {
 		t.Fatal("Expected not to have changed Snake Direction to LEFT")
+	}
+}
+
+func TestSnakeDie(t *testing.T) {
+	snake := NewDoubleSnake(RIGHT)
+	snake.Die()
+	if snake.Alive != false {
+		t.Fatal("Expected Snake not to be alive")
 	}
 }
