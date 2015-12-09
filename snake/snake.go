@@ -13,6 +13,14 @@ type Snake struct {
 	Alive     bool
 }
 
+func NewSnake(d int, b [][]int) Snake {
+	return Snake{
+		Alive:     true,
+		Body:      b,
+		Direction: d,
+	}
+}
+
 func (s *Snake) ChangeDirection(d int) {
 	oposity := map[int]int{RIGHT: LEFT, LEFT: RIGHT, UP: DOWN, DOWN: UP}
 
@@ -23,6 +31,10 @@ func (s *Snake) ChangeDirection(d int) {
 
 func (s *Snake) Head() []int {
 	return s.Body[len(s.Body)-1]
+}
+
+func (s *Snake) Die() {
+	s.Alive = false
 }
 
 func (s *Snake) Move() {
@@ -40,9 +52,19 @@ func (s *Snake) Move() {
 		h[1]--
 	}
 
+	if s.onTopOfItself(h) {
+		s.Die()
+	}
+
 	s.Body = append(s.Body[1:], h)
 }
 
-func (s *Snake) Die() {
-	s.Alive = false
+func (s *Snake) onTopOfItself(h []int) bool {
+	for _, p := range s.Body {
+		if p[0] == h[0] && p[1] == h[1] {
+			return true
+		}
+	}
+
+	return false
 }

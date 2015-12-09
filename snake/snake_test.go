@@ -3,27 +3,37 @@ package snake
 import "testing"
 
 func NewDoubleSnake(d int) Snake {
-	return Snake{
-		Direction: d,
-		Alive:     true,
-		Body:      [][]int{{1, 2}, {1, 3}, {1, 4}},
-	}
+	return NewSnake(d, [][]int{
+		{1, 0},
+		{1, 1},
+		{1, 2},
+		{1, 3},
+		{1, 4},
+	})
 }
 
 func TestSnakeBodyMove(t *testing.T) {
 	snake := NewDoubleSnake(RIGHT)
 	snake.Move()
 
-	if snake.Body[0][0] != 1 || snake.Body[0][1] != 3 {
-		t.Fatalf("Invalid body position %x", snake.Body)
+	if snake.Body[0][0] != 1 || snake.Body[0][1] != 1 {
+		t.Fatalf("Invalid body position %x", snake.Body[0])
 	}
 
-	if snake.Body[1][0] != 1 || snake.Body[1][1] != 4 {
-		t.Fatalf("Invalid body position %x", snake.Body)
+	if snake.Body[1][0] != 1 || snake.Body[1][1] != 2 {
+		t.Fatalf("Invalid body position %x", snake.Body[1])
 	}
 
-	if snake.Body[2][0] != 2 || snake.Body[2][1] != 4 {
-		t.Fatalf("Invalid body position %x", snake.Body)
+	if snake.Body[2][0] != 1 || snake.Body[2][1] != 3 {
+		t.Fatalf("Invalid body position %x", snake.Body[2])
+	}
+
+	if snake.Body[3][0] != 1 || snake.Body[3][1] != 4 {
+		t.Fatalf("Invalid body position %x", snake.Body[3])
+	}
+
+	if snake.Body[4][0] != 2 || snake.Body[4][1] != 4 {
+		t.Fatalf("Invalid body position %x", snake.Body[4])
 	}
 }
 
@@ -81,8 +91,29 @@ func TestChangeDirectionToOposity(t *testing.T) {
 
 func TestSnakeDie(t *testing.T) {
 	snake := NewDoubleSnake(RIGHT)
+
+	if snake.Alive != true {
+		t.Fatal("Expected Snake to be alive")
+	}
+
 	snake.Die()
+
 	if snake.Alive != false {
 		t.Fatal("Expected Snake not to be alive")
+	}
+}
+
+func TestSnakeDieWhenMoveOnTopOfItself(t *testing.T) {
+	snake := NewDoubleSnake(RIGHT)
+	snake.Move()
+
+	snake.ChangeDirection(DOWN)
+	snake.Move()
+
+	snake.ChangeDirection(LEFT)
+	snake.Move()
+
+	if snake.Alive != false {
+		t.Fatal("Expected Snake to die when moved on top of itself")
 	}
 }
