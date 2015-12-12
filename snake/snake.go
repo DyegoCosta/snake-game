@@ -1,5 +1,7 @@
 package snake
 
+import "errors"
+
 const (
 	RIGHT = iota
 	LEFT
@@ -10,18 +12,18 @@ const (
 type Snake struct {
 	Body      [][]int
 	Direction int
-	Alive     bool
+	Length    int
 }
 
-func NewSnake(d int, b [][]int) Snake {
-	return Snake{
-		Alive:     true,
+func newSnake(d int, b [][]int) *Snake {
+	return &Snake{
+		Length:    len(b),
 		Body:      b,
 		Direction: d,
 	}
 }
 
-func (s *Snake) ChangeDirection(d int) {
+func (s *Snake) changeDirection(d int) {
 	oposity := map[int]int{RIGHT: LEFT, LEFT: RIGHT, UP: DOWN, DOWN: UP}
 
 	if oposity[s.Direction] != d {
@@ -29,17 +31,17 @@ func (s *Snake) ChangeDirection(d int) {
 	}
 }
 
-func (s *Snake) Head() []int {
+func (s *Snake) head() []int {
 	return s.Body[len(s.Body)-1]
 }
 
-func (s *Snake) Die() {
-	s.Alive = false
+func (s *Snake) die() error {
+	return errors.New("Died")
 }
 
-func (s *Snake) Move() {
+func (s *Snake) move() error {
 	h := make([]int, 2)
-	copy(h, s.Head())
+	copy(h, s.head())
 
 	switch s.Direction {
 	case RIGHT:
@@ -52,14 +54,16 @@ func (s *Snake) Move() {
 		h[1]--
 	}
 
-	if s.onTopOfItself(h) {
-		s.Die()
+	if s.isOnPosition(h) {
+		return s.die()
 	}
 
 	s.Body = append(s.Body[1:], h)
+
+	return nil
 }
 
-func (s *Snake) onTopOfItself(h []int) bool {
+func (s *Snake) isOnPosition(h []int) bool {
 	for _, p := range s.Body {
 		if p[0] == h[0] && p[1] == h[1] {
 			return true
