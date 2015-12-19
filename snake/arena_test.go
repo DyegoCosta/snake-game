@@ -2,6 +2,14 @@ package snake
 
 import "testing"
 
+var pointsDouble = make(chan int)
+
+func newDoubleArenaWithFoodFinder(h, w int, f func(*Arena, []int) bool) *Arena {
+	a := newDoubleArena(h, w)
+	a.hasFood = f
+	return a
+}
+
 func newDoubleArena(h, w int) *Arena {
 	s := newSnake(RIGHT, [][]int{
 		{1, 0},
@@ -11,7 +19,7 @@ func newDoubleArena(h, w int) *Arena {
 		{1, 4},
 	})
 
-	return newArena(s, h, w)
+	return newArena(s, pointsDouble, h, w)
 }
 
 func TestArenaHaveFoodPlaced(t *testing.T) {
@@ -39,13 +47,84 @@ func TestMoveSnakeOutOfArenaWidthLimit(t *testing.T) {
 }
 
 func TestPlaceNewFoodWhenEatFood(t *testing.T) {
-	t.Fatal()
+	a := newDoubleArenaWithFoodFinder(10, 10, func(*Arena, []int) bool {
+		return true
+	})
+
+	f := a.Food
+
+	a.moveSnake()
+
+	if a.Food.X == f.X && a.Food.Y == f.Y {
+		t.Fatal("Expected new food to have been placed on Arena")
+	}
 }
 
 func TestIncreaseSnakeLengthWhenEatFood(t *testing.T) {
-	t.Fatal()
+	a := newDoubleArenaWithFoodFinder(10, 10, func(*Arena, []int) bool {
+		return true
+	})
+
+	l := a.Snake.Length
+
+	a.moveSnake()
+
+	if a.Snake.Length != l+1 {
+		t.Fatal("Expected Snake to have grown")
+	}
 }
 
 func TestAddPointsWhenEatFood(t *testing.T) {
-	t.Fatal()
+	a := newDoubleArenaWithFoodFinder(10, 10, func(*Arena, []int) bool {
+		return true
+	})
+
+	if p, ok := <-pointsDouble; ok && p != a.Food.Points {
+		t.Fatalf("Value %d was expected but got %d", a.Food.Points, p)
+	}
+
+	a.moveSnake()
+}
+
+func TestDoesNotAddPointsWhenFoodNotFound(t *testing.T) {
+	a := newDoubleArenaWithFoodFinder(10, 10, func(*Arena, []int) bool {
+		return false
+	})
+
+	select {
+	case p, _ := <-points:
+		t.Fatalf("No point was expected to be received but received %d", p)
+	default:
+		close(points)
+	}
+
+	a.moveSnake()
+}
+
+func TestDoesNotPlaceNewFoodWhenFoodNotFound(t *testing.T) {
+	a := newDoubleArenaWithFoodFinder(10, 10, func(*Arena, []int) bool {
+		return false
+	})
+
+	f := a.Food
+
+	a.moveSnake()
+
+	if a.Food.X != f.X || a.Food.Y != f.Y {
+		t.Fatal("Food in Arena expected not to have changed")
+	}
+}
+
+func TestDoesNotIncreaseSnakeLengthWhenFoodNotFound(t *testing.T) {
+	a := newDoubleArenaWithFoodFinder(10, 10, func(*Arena, []int) bool {
+		return false
+	})
+
+	l := a.Snake.Length
+
+	a.moveSnake()
+
+	if a.Snake.Length != l {
+		t.Fatal("Expected Snake not to have grown")
+	}
 }
