@@ -33,8 +33,9 @@ func (g *Game) handlePointsReceived() {
 	}
 }
 
-func (g *Game) dificultyMoveInterval() time.Duration {
-	return 100 * time.Millisecond
+func (g *Game) moveInterval() time.Duration {
+	ms := 100 - (g.Score / 10)
+	return time.Duration(ms) * time.Millisecond
 }
 
 func initTermbox() {
@@ -67,6 +68,6 @@ mainloop:
 			panic(err)
 		}
 
-		time.Sleep(g.dificultyMoveInterval())
+		time.Sleep(g.moveInterval())
 	}
 }
