@@ -8,7 +8,7 @@ type Food struct {
 
 func NewFood(x, y int) *Food {
 	return &Food{
-		Points: 1,
+		Points: 10,
 		X:      x,
 		Y:      y,
 	}

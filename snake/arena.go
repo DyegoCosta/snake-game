@@ -67,6 +67,10 @@ func (a *Arena) placeFood() {
 	a.Food = NewFood(x, y)
 }
 
+func hasFood(a *Arena, p []int) bool {
+	return p[0] == a.Food.X && p[1] == a.Food.Y
+}
+
 func (a *Arena) isOccupied(p []int) bool {
 	return a.Snake.isOnPosition(p)
 }

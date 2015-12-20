@@ -3,7 +3,7 @@ package snake
 import "errors"
 
 const (
-	RIGHT = iota
+	RIGHT = 1 + iota
 	LEFT
 	UP
 	DOWN
@@ -58,7 +58,11 @@ func (s *Snake) move() error {
 		return s.die()
 	}
 
-	s.Body = append(s.Body[1:], h)
+	if s.Length > len(s.Body) {
+		s.Body = append(s.Body, h)
+	} else {
+		s.Body = append(s.Body[1:], h)
+	}
 
 	return nil
 }

@@ -17,7 +17,7 @@ type Game struct {
 
 func NewGame() *Game {
 	s := newSnake(RIGHT, [][]int{{1, 1}, {1, 2}, {1, 3}, {1, 4}})
-	a := newArena(s, pointsChan, 20, 20)
+	a := newArena(s, pointsChan, 20, 50)
 	return &Game{Arena: a, Score: 0}
 }
 
@@ -47,7 +47,7 @@ func (g *Game) handleKeyPress() {
 }
 
 func (g *Game) dificultyMoveInterval() time.Duration {
-	return 150 * time.Millisecond
+	return 100 * time.Millisecond
 }
 
 func initTermbox() {
@@ -69,6 +69,8 @@ func (g *Game) Start() {
 	go g.handleKeyPress()
 	defer close(keyboardChan)
 
+	g.render()
+
 mainloop:
 	for {
 		if err := g.Arena.moveSnake(); err != nil {
@@ -76,6 +78,7 @@ mainloop:
 			break mainloop
 		}
 
+		g.render()
 		time.Sleep(g.dificultyMoveInterval())
 	}
 }
