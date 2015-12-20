@@ -13,5 +13,5 @@ $ $GOPATH/bin/snake-game
 
 ```
 $ cd $GOPATH/src/github.com/DyegoCosta/snake-game
-$ go test ./snake
+$ go test ./...
 ```
