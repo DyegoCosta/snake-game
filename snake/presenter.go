@@ -41,7 +41,7 @@ func renderSnake(left, bottom int, s *Snake) {
 }
 
 func renderFood(left, bottom int, f *Food) {
-	termbox.SetCell(left+f.X, bottom-f.Y, '⌘', foodColor, bgColor)
+	termbox.SetCell(left+f.X, bottom-f.Y, f.Emoji, foodColor, bgColor)
 }
 
 func renderArena(a *Arena, top, bottom, midX int) {
