@@ -25,6 +25,7 @@ func (g *Game) render() error {
 		bottom = midY + (g.Arena.Height / 2)
 	)
 
+	renderTitle(midX, top)
 	renderArena(g.Arena, top, bottom, midX)
 	renderSnake(left, bottom, g.Arena.Snake)
 	renderFood(left, bottom, g.Arena.Food)
@@ -60,7 +61,11 @@ func renderArena(a *Arena, top, bottom, midX int) {
 
 func renderScore(midX, bottom, s int) {
 	score := fmt.Sprintf("Score: %v", s)
-	tbprint(midX, bottom+1, defaultColor, defaultColor, score)
+	tbprint(midX-1, bottom+1, defaultColor, defaultColor, score)
+}
+
+func renderTitle(midX, top int) {
+	tbprint(midX-1, top-1, defaultColor, defaultColor, "Snake Game")
 }
 
 func fill(x, y, w, h int, cell termbox.Cell) {
