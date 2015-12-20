@@ -1,5 +1,7 @@
 # Snake Game
 
+[![Build Status](https://travis-ci.org/DyegoCosta/snake-game.svg?branch=master)](https://travis-ci.org/DyegoCosta/snake-game)
+
 Terminal-based Snake game
 
 ## Play
