@@ -92,10 +92,10 @@ func TestDoesNotAddPointsWhenFoodNotFound(t *testing.T) {
 	})
 
 	select {
-	case p, _ := <-points:
+	case p, _ := <-pointsChan:
 		t.Fatalf("No point was expected to be received but received %d", p)
 	default:
-		close(points)
+		close(pointsChan)
 	}
 
 	a.moveSnake()

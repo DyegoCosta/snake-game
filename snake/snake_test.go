@@ -92,6 +92,14 @@ func TestChangeDirectionToOposity(t *testing.T) {
 	}
 }
 
+func TestChangeDirectionToInvalidDirection(t *testing.T) {
+	snake := NewDoubleSnake(RIGHT)
+	snake.changeDirection(5)
+	if snake.Direction != RIGHT {
+		t.Fatal("Expected not to have changed Snake Direction")
+	}
+}
+
 func TestSnakeDie(t *testing.T) {
 	snake := NewDoubleSnake(RIGHT)
 

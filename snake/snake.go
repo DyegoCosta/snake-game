@@ -24,9 +24,9 @@ func newSnake(d int, b [][]int) *Snake {
 }
 
 func (s *Snake) changeDirection(d int) {
-	oposity := map[int]int{RIGHT: LEFT, LEFT: RIGHT, UP: DOWN, DOWN: UP}
+	opposites := map[int]int{RIGHT: LEFT, LEFT: RIGHT, UP: DOWN, DOWN: UP}
 
-	if oposity[s.Direction] != d {
+	if o := opposites[d]; o != 0 && o != s.Direction {
 		s.Direction = d
 	}
 }

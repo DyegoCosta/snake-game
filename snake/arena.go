@@ -1,26 +1,23 @@
 package snake
 
-import (
-	"fmt"
-	"math/rand"
-)
+import "math/rand"
 
 type Arena struct {
-	Food    *Food
-	Snake   *Snake
-	hasFood func(*Arena, []int) bool
-	Height  int
-	Width   int
-	points  chan (int)
+	Food       *Food
+	Snake      *Snake
+	hasFood    func(*Arena, []int) bool
+	Height     int
+	Width      int
+	pointsChan chan (int)
 }
 
 func newArena(s *Snake, p chan (int), h, w int) *Arena {
 	a := &Arena{
-		Snake:   s,
-		Height:  h,
-		Width:   w,
-		points:  p,
-		hasFood: hasFood,
+		Snake:      s,
+		Height:     h,
+		Width:      w,
+		pointsChan: p,
+		hasFood:    hasFood,
 	}
 
 	a.placeFood()
@@ -38,7 +35,6 @@ func (a *Arena) moveSnake() error {
 	}
 
 	if a.hasFood(a, a.Snake.head()) {
-		fmt.Println("LOL")
 		go a.addPoints(a.Food.Points)
 		a.Snake.Length++
 		a.placeFood()
@@ -53,7 +49,7 @@ func (a *Arena) snakeLeftArena() bool {
 }
 
 func (a *Arena) addPoints(p int) {
-	a.points <- p
+	a.pointsChan <- p
 }
 
 func (a *Arena) placeFood() {
