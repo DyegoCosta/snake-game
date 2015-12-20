@@ -8,7 +8,6 @@ import (
 )
 
 var pointsChan = make(chan int)
-var keyboardChan = make(chan string)
 
 type Game struct {
 	Arena *Arena
@@ -28,20 +27,8 @@ func (g *Game) end() {
 
 func (g *Game) handlePointsReceived() {
 	for {
-		select {
-		case p, _ := <-pointsChan:
+		if p, ok := <-pointsChan; ok {
 			g.Score += p
-		}
-	}
-}
-
-func (g *Game) handleKeyPress() {
-	for {
-		select {
-		case k, _ := <-keyboardChan:
-			s := g.Arena.Snake
-			d := keyToDirection(k)
-			s.changeDirection(d)
 		}
 	}
 }
@@ -65,9 +52,7 @@ func (g *Game) Start() {
 	go g.handlePointsReceived()
 	defer close(pointsChan)
 
-	go startKeyboardListener(keyboardChan)
-	go g.handleKeyPress()
-	defer close(keyboardChan)
+	go g.startKeyboardArrowsListener()
 
 	g.render()
 

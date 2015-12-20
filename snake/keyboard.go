@@ -1,38 +1,26 @@
 package snake
 
-import (
-	"fmt"
+import "github.com/nsf/termbox-go"
 
-	"github.com/nsf/termbox-go"
-)
-
-func startKeyboardListener(k chan string) {
+func (g *Game) startKeyboardArrowsListener() {
 	termbox.SetInputMode(termbox.InputAlt)
-	data := make([]byte, 0, 64)
+	s := g.Arena.Snake
 
 	for {
-		beg := len(data)
-		d := data[beg : beg+32]
-		switch ev := termbox.PollRawEvent(d); ev.Type {
-		case termbox.EventRaw:
-			k <- fmt.Sprintf("%X", data[:beg+ev.N])
+		switch ev := termbox.PollEvent(); ev.Type {
+		case termbox.EventKey:
+			switch ev.Key {
+			case termbox.KeyArrowLeft:
+				s.changeDirection(LEFT)
+			case termbox.KeyArrowDown:
+				s.changeDirection(DOWN)
+			case termbox.KeyArrowRight:
+				s.changeDirection(RIGHT)
+			case termbox.KeyArrowUp:
+				s.changeDirection(UP)
+			}
 		case termbox.EventError:
 			panic(ev.Err)
 		}
-	}
-}
-
-func keyToDirection(k string) int {
-	switch k {
-	case "1B4F41":
-		return UP
-	case "1B4F42":
-		return DOWN
-	case "1B4F43":
-		return RIGHT
-	case "1B4F44":
-		return LEFT
-	default:
-		return 0
 	}
 }
