@@ -1,7 +1,17 @@
-# Snake Go
+# Snake Game
 
-:construction: Future Snake game for terminals
+Terminal-based Snake game
+
+## Play
+
+```
+$ go get github.com/DyegoCosta/snake-game
+$ $GOPATH/bin/snake-game
+```
 
 ## Testing
 
-`go test ./snake`
+```
+$ cd $GOPATH/src/github.com/DyegoCosta/snake-game
+$ go test ./snake
+```
