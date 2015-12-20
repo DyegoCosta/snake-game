@@ -63,7 +63,10 @@ mainloop:
 			break mainloop
 		}
 
-		g.render()
+		if err := g.render(); err != nil {
+			panic(err)
+		}
+
 		time.Sleep(g.dificultyMoveInterval())
 	}
 }

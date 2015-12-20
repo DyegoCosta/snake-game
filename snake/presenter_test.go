@@ -2,5 +2,10 @@ package snake
 
 import "testing"
 
-func TestPresenterRendersGameProperly(t *testing.T) {
+func TestPresenterRendersSuccessfully(t *testing.T) {
+	g := NewGame()
+
+	if err := g.render(); err != nil {
+		t.Fatal("Expected Game to have been rendered successfully")
+	}
 }

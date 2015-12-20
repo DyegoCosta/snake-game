@@ -11,10 +11,9 @@ const (
 	defaultColor = termbox.ColorDefault
 	bgColor      = termbox.ColorDefault
 	snakeColor   = termbox.ColorGreen
-	foodColor    = termbox.ColorRed
 )
 
-func (g *Game) render() {
+func (g *Game) render() error {
 	termbox.Clear(defaultColor, defaultColor)
 
 	var (
@@ -31,7 +30,7 @@ func (g *Game) render() {
 	renderFood(left, bottom, g.Arena.Food)
 	renderScore(midX, bottom, g.Score)
 
-	termbox.Flush()
+	return termbox.Flush()
 }
 
 func renderSnake(left, bottom int, s *Snake) {
@@ -41,7 +40,7 @@ func renderSnake(left, bottom int, s *Snake) {
 }
 
 func renderFood(left, bottom int, f *Food) {
-	termbox.SetCell(left+f.X, bottom-f.Y, f.Emoji, foodColor, bgColor)
+	termbox.SetCell(left+f.X, bottom-f.Y, f.Emoji, defaultColor, bgColor)
 }
 
 func renderArena(a *Arena, top, bottom, midX int) {
