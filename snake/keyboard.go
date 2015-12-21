@@ -2,22 +2,21 @@ package snake
 
 import "github.com/nsf/termbox-go"
 
-func (g *Game) startKeyboardArrowsListener() {
+func listenToKeyboard(k chan int) {
 	termbox.SetInputMode(termbox.InputAlt)
-	s := g.Arena.Snake
 
 	for {
 		switch ev := termbox.PollEvent(); ev.Type {
 		case termbox.EventKey:
 			switch ev.Key {
 			case termbox.KeyArrowLeft:
-				s.changeDirection(LEFT)
+				k <- LEFT
 			case termbox.KeyArrowDown:
-				s.changeDirection(DOWN)
+				k <- DOWN
 			case termbox.KeyArrowRight:
-				s.changeDirection(RIGHT)
+				k <- RIGHT
 			case termbox.KeyArrowUp:
-				s.changeDirection(UP)
+				k <- UP
 			}
 		case termbox.EventError:
 			panic(ev.Err)
