@@ -45,7 +45,9 @@ func (g *Game) Start() {
 
 	go listenToKeyboard(movesChan, endGameChan)
 
-	g.render()
+	if err := g.render(); err != nil {
+		panic(err)
+	}
 
 mainloop:
 	for {
