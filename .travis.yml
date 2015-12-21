@@ -2,3 +2,7 @@ language: go
 
 go:
   - tip
+
+install:
+  - go get github.com/mattn/go-runewidth
+  - go get github.com/nsf/termbox-go
