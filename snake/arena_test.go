@@ -4,19 +4,19 @@ import "testing"
 
 var pointsDouble = make(chan int)
 
-func newDoubleArenaWithFoodFinder(h, w int, f func(*Arena, []int) bool) *Arena {
+func newDoubleArenaWithFoodFinder(h, w int, f func(*Arena, Coord) bool) *Arena {
 	a := newDoubleArena(h, w)
 	a.hasFood = f
 	return a
 }
 
 func newDoubleArena(h, w int) *Arena {
-	s := newSnake(RIGHT, [][]int{
-		{1, 0},
-		{1, 1},
-		{1, 2},
-		{1, 3},
-		{1, 4},
+	s := newSnake(RIGHT, []Coord{
+		Coord{X: 1, Y: 0},
+		Coord{X: 1, Y: 1},
+		Coord{X: 1, Y: 2},
+		Coord{X: 1, Y: 3},
+		Coord{X: 1, Y: 4},
 	})
 
 	return newArena(s, pointsDouble, h, w)
@@ -47,7 +47,7 @@ func TestMoveSnakeOutOfArenaWidthLimit(t *testing.T) {
 }
 
 func TestPlaceNewFoodWhenEatFood(t *testing.T) {
-	a := newDoubleArenaWithFoodFinder(10, 10, func(*Arena, []int) bool {
+	a := newDoubleArenaWithFoodFinder(10, 10, func(*Arena, Coord) bool {
 		return true
 	})
 
@@ -61,7 +61,7 @@ func TestPlaceNewFoodWhenEatFood(t *testing.T) {
 }
 
 func TestIncreaseSnakeLengthWhenEatFood(t *testing.T) {
-	a := newDoubleArenaWithFoodFinder(10, 10, func(*Arena, []int) bool {
+	a := newDoubleArenaWithFoodFinder(10, 10, func(*Arena, Coord) bool {
 		return true
 	})
 
@@ -75,7 +75,7 @@ func TestIncreaseSnakeLengthWhenEatFood(t *testing.T) {
 }
 
 func TestAddPointsWhenEatFood(t *testing.T) {
-	a := newDoubleArenaWithFoodFinder(10, 10, func(*Arena, []int) bool {
+	a := newDoubleArenaWithFoodFinder(10, 10, func(*Arena, Coord) bool {
 		return true
 	})
 
@@ -87,7 +87,7 @@ func TestAddPointsWhenEatFood(t *testing.T) {
 }
 
 func TestDoesNotAddPointsWhenFoodNotFound(t *testing.T) {
-	a := newDoubleArenaWithFoodFinder(10, 10, func(*Arena, []int) bool {
+	a := newDoubleArenaWithFoodFinder(10, 10, func(*Arena, Coord) bool {
 		return false
 	})
 
@@ -102,7 +102,7 @@ func TestDoesNotAddPointsWhenFoodNotFound(t *testing.T) {
 }
 
 func TestDoesNotPlaceNewFoodWhenFoodNotFound(t *testing.T) {
-	a := newDoubleArenaWithFoodFinder(10, 10, func(*Arena, []int) bool {
+	a := newDoubleArenaWithFoodFinder(10, 10, func(*Arena, Coord) bool {
 		return false
 	})
 
@@ -116,7 +116,7 @@ func TestDoesNotPlaceNewFoodWhenFoodNotFound(t *testing.T) {
 }
 
 func TestDoesNotIncreaseSnakeLengthWhenFoodNotFound(t *testing.T) {
-	a := newDoubleArenaWithFoodFinder(10, 10, func(*Arena, []int) bool {
+	a := newDoubleArenaWithFoodFinder(10, 10, func(*Arena, Coord) bool {
 		return false
 	})
 
@@ -132,7 +132,7 @@ func TestDoesNotIncreaseSnakeLengthWhenFoodNotFound(t *testing.T) {
 func TestHasFood(t *testing.T) {
 	a := newDoubleArena(20, 20)
 
-	if !hasFood(a, []int{a.Food.X, a.Food.Y}) {
+	if !hasFood(a, Coord{X: a.Food.X, Y: a.Food.Y}) {
 		t.Fatal("Food expected to be found")
 	}
 }
@@ -140,7 +140,7 @@ func TestHasFood(t *testing.T) {
 func TestHasNotFood(t *testing.T) {
 	a := newDoubleArena(20, 20)
 
-	if hasFood(a, []int{a.Food.X - 1, a.Food.Y}) {
+	if hasFood(a, Coord{X: a.Food.X - 1, Y: a.Food.Y}) {
 		t.Fatal("No food expected to be found")
 	}
 }

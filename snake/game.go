@@ -19,8 +19,15 @@ type Game struct {
 }
 
 func NewGame() *Game {
-	s := newSnake(RIGHT, [][]int{{1, 1}, {1, 2}, {1, 3}, {1, 4}})
+	s := newSnake(RIGHT, []Coord{
+		Coord{X: 1, Y: 1},
+		Coord{X: 1, Y: 2},
+		Coord{X: 1, Y: 3},
+		Coord{X: 1, Y: 4},
+	})
+
 	a := newArena(s, pointsChan, 20, 50)
+
 	return &Game{Arena: a, Score: 0}
 }
 

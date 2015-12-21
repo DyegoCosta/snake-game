@@ -5,7 +5,7 @@ import "math/rand"
 type Arena struct {
 	Food       *Food
 	Snake      *Snake
-	hasFood    func(*Arena, []int) bool
+	hasFood    func(*Arena, Coord) bool
 	Height     int
 	Width      int
 	pointsChan chan (int)
@@ -45,7 +45,7 @@ func (a *Arena) moveSnake() error {
 
 func (a *Arena) snakeLeftArena() bool {
 	h := a.Snake.head()
-	return h[0] > a.Width || h[1] > a.Height || h[0] < 0 || h[1] < 0
+	return h.X > a.Width || h.Y > a.Height || h.X < 0 || h.Y < 0
 }
 
 func (a *Arena) addPoints(p int) {
@@ -59,7 +59,7 @@ func (a *Arena) placeFood() {
 		x = rand.Intn(a.Width)
 		y = rand.Intn(a.Height)
 
-		if !a.isOccupied([]int{x, y}) {
+		if !a.isOccupied(Coord{X: x, Y: y}) {
 			break
 		}
 	}
@@ -67,10 +67,10 @@ func (a *Arena) placeFood() {
 	a.Food = NewFood(x, y)
 }
 
-func hasFood(a *Arena, p []int) bool {
-	return p[0] == a.Food.X && p[1] == a.Food.Y
+func hasFood(a *Arena, c Coord) bool {
+	return c.X == a.Food.X && c.Y == a.Food.Y
 }
 
-func (a *Arena) isOccupied(p []int) bool {
-	return a.Snake.isOnPosition(p)
+func (a *Arena) isOccupied(c Coord) bool {
+	return a.Snake.isOnPosition(c)
 }

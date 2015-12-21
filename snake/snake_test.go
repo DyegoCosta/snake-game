@@ -3,12 +3,12 @@ package snake
 import "testing"
 
 func NewDoubleSnake(d int) *Snake {
-	return newSnake(d, [][]int{
-		{1, 0},
-		{1, 1},
-		{1, 2},
-		{1, 3},
-		{1, 4},
+	return newSnake(d, []Coord{
+		Coord{X: 1, Y: 0},
+		Coord{X: 1, Y: 1},
+		Coord{X: 1, Y: 2},
+		Coord{X: 1, Y: 3},
+		Coord{X: 1, Y: 4},
 	})
 }
 
@@ -16,23 +16,23 @@ func TestSnakeBodyMove(t *testing.T) {
 	snake := NewDoubleSnake(RIGHT)
 	snake.move()
 
-	if snake.Body[0][0] != 1 || snake.Body[0][1] != 1 {
+	if snake.Body[0].X != 1 || snake.Body[0].Y != 1 {
 		t.Fatalf("Invalid body position %x", snake.Body[0])
 	}
 
-	if snake.Body[1][0] != 1 || snake.Body[1][1] != 2 {
+	if snake.Body[1].X != 1 || snake.Body[1].Y != 2 {
 		t.Fatalf("Invalid body position %x", snake.Body[1])
 	}
 
-	if snake.Body[2][0] != 1 || snake.Body[2][1] != 3 {
+	if snake.Body[2].X != 1 || snake.Body[2].Y != 3 {
 		t.Fatalf("Invalid body position %x", snake.Body[2])
 	}
 
-	if snake.Body[3][0] != 1 || snake.Body[3][1] != 4 {
+	if snake.Body[3].X != 1 || snake.Body[3].Y != 4 {
 		t.Fatalf("Invalid body position %x", snake.Body[3])
 	}
 
-	if snake.Body[4][0] != 2 || snake.Body[4][1] != 4 {
+	if snake.Body[4].X != 2 || snake.Body[4].Y != 4 {
 		t.Fatalf("Invalid body position %x", snake.Body[4])
 	}
 }
@@ -41,7 +41,7 @@ func TestSnakeHeadMoveRight(t *testing.T) {
 	snake := NewDoubleSnake(RIGHT)
 	snake.move()
 
-	if snake.head()[0] != 2 || snake.head()[1] != 4 {
+	if snake.head().X != 2 || snake.head().Y != 4 {
 		t.Fatalf("Expected head to have moved to position [2 4], got %x", snake.head())
 	}
 }
@@ -50,7 +50,7 @@ func TestSnakeHeadMoveUp(t *testing.T) {
 	snake := NewDoubleSnake(UP)
 	snake.move()
 
-	if snake.head()[0] != 1 || snake.head()[1] != 5 {
+	if snake.head().X != 1 || snake.head().Y != 5 {
 		t.Fatalf("Expected head to have moved to position [1 5], got %x", snake.head())
 	}
 }
@@ -62,7 +62,7 @@ func TestSnakeHeadMoveDown(t *testing.T) {
 	snake.changeDirection(DOWN)
 	snake.move()
 
-	if snake.head()[0] != 2 || snake.head()[1] != 3 {
+	if snake.head().X != 2 || snake.head().Y != 3 {
 		t.Fatalf("Expected head to have moved to position [2 3], got %x", snake.head())
 	}
 }
@@ -71,7 +71,7 @@ func TestSnakeHeadMoveLeft(t *testing.T) {
 	snake := NewDoubleSnake(LEFT)
 	snake.move()
 
-	if snake.head()[0] != 0 || snake.head()[1] != 4 {
+	if snake.head().X != 0 || snake.head().Y != 4 {
 		t.Fatalf("Expected head to have moved to position [0 4], got %x", snake.head())
 	}
 }

@@ -37,7 +37,7 @@ func (g *Game) render() error {
 
 func renderSnake(left, bottom int, s *Snake) {
 	for _, b := range s.Body {
-		termbox.SetCell(left+b[0], bottom-b[1], ' ', snakeColor, snakeColor)
+		termbox.SetCell(left+b.X, bottom-b.Y, ' ', snakeColor, snakeColor)
 	}
 }
 

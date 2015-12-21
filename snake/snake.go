@@ -10,12 +10,12 @@ const (
 )
 
 type Snake struct {
-	Body      [][]int
+	Body      []Coord
 	Direction int
 	Length    int
 }
 
-func newSnake(d int, b [][]int) *Snake {
+func newSnake(d int, b []Coord) *Snake {
 	return &Snake{
 		Length:    len(b),
 		Body:      b,
@@ -31,7 +31,7 @@ func (s *Snake) changeDirection(d int) {
 	}
 }
 
-func (s *Snake) head() []int {
+func (s *Snake) head() Coord {
 	return s.Body[len(s.Body)-1]
 }
 
@@ -40,36 +40,36 @@ func (s *Snake) die() error {
 }
 
 func (s *Snake) move() error {
-	h := make([]int, 2)
-	copy(h, s.head())
+	h := s.head()
+	c := Coord{X: h.X, Y: h.Y}
 
 	switch s.Direction {
 	case RIGHT:
-		h[0]++
+		c.X += 1
 	case LEFT:
-		h[0]--
+		c.X -= 1
 	case UP:
-		h[1]++
+		c.Y += 1
 	case DOWN:
-		h[1]--
+		c.Y -= 1
 	}
 
-	if s.isOnPosition(h) {
+	if s.isOnPosition(c) {
 		return s.die()
 	}
 
 	if s.Length > len(s.Body) {
-		s.Body = append(s.Body, h)
+		s.Body = append(s.Body, c)
 	} else {
-		s.Body = append(s.Body[1:], h)
+		s.Body = append(s.Body[1:], c)
 	}
 
 	return nil
 }
 
-func (s *Snake) isOnPosition(h []int) bool {
-	for _, p := range s.Body {
-		if p[0] == h[0] && p[1] == h[1] {
+func (s *Snake) isOnPosition(c Coord) bool {
+	for _, b := range s.Body {
+		if b.X == c.X && b.Y == c.Y {
 			return true
 		}
 	}
