@@ -2,21 +2,23 @@ package snake
 
 import "github.com/nsf/termbox-go"
 
-func listenToKeyboard(k chan int) {
-	termbox.SetInputMode(termbox.InputAlt)
+func listenToKeyboard(moves chan int, end chan bool) {
+	termbox.SetInputMode(termbox.InputEsc)
 
 	for {
 		switch ev := termbox.PollEvent(); ev.Type {
 		case termbox.EventKey:
 			switch ev.Key {
 			case termbox.KeyArrowLeft:
-				k <- LEFT
+				moves <- LEFT
 			case termbox.KeyArrowDown:
-				k <- DOWN
+				moves <- DOWN
 			case termbox.KeyArrowRight:
-				k <- RIGHT
+				moves <- RIGHT
 			case termbox.KeyArrowUp:
-				k <- UP
+				moves <- UP
+			case termbox.KeyEsc:
+				end <- true
 			}
 		case termbox.EventError:
 			panic(ev.Err)

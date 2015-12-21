@@ -19,17 +19,18 @@ func (g *Game) render() error {
 	var (
 		w, h   = termbox.Size()
 		midY   = h / 2
-		midX   = (w - g.Arena.Width) / 2
-		left   = midX - 1
+		left   = (w - g.Arena.Width) / 2
+		right  = (w + g.Arena.Width) / 2
 		top    = midY - (g.Arena.Height / 2)
-		bottom = midY + (g.Arena.Height / 2)
+		bottom = midY + (g.Arena.Height / 2) + 1
 	)
 
-	renderTitle(midX, top)
-	renderArena(g.Arena, top, bottom, midX)
+	renderTitle(left, top)
+	renderArena(g.Arena, top, bottom, left)
 	renderSnake(left, bottom, g.Arena.Snake)
 	renderFood(left, bottom, g.Arena.Food)
-	renderScore(midX, bottom, g.Score)
+	renderScore(left, bottom, g.Score)
+	renderQuitMessage(right, bottom)
 
 	return termbox.Flush()
 }
@@ -44,28 +45,33 @@ func renderFood(left, bottom int, f *Food) {
 	termbox.SetCell(left+f.X, bottom-f.Y, f.Emoji, defaultColor, bgColor)
 }
 
-func renderArena(a *Arena, top, bottom, midX int) {
+func renderArena(a *Arena, top, bottom, left int) {
 	for i := top; i < bottom; i++ {
-		termbox.SetCell(midX-1, i, '│', defaultColor, bgColor)
-		termbox.SetCell(midX+a.Width, i, '│', defaultColor, bgColor)
+		termbox.SetCell(left-1, i, '│', defaultColor, bgColor)
+		termbox.SetCell(left+a.Width, i, '│', defaultColor, bgColor)
 	}
 
-	termbox.SetCell(midX-1, top, '┌', defaultColor, bgColor)
-	termbox.SetCell(midX-1, bottom, '└', defaultColor, bgColor)
-	termbox.SetCell(midX+a.Width, top, '┐', defaultColor, bgColor)
-	termbox.SetCell(midX+a.Width, bottom, '┘', defaultColor, bgColor)
+	termbox.SetCell(left-1, top, '┌', defaultColor, bgColor)
+	termbox.SetCell(left-1, bottom, '└', defaultColor, bgColor)
+	termbox.SetCell(left+a.Width, top, '┐', defaultColor, bgColor)
+	termbox.SetCell(left+a.Width, bottom, '┘', defaultColor, bgColor)
 
-	fill(midX, top, a.Width, 1, termbox.Cell{Ch: '─'})
-	fill(midX, bottom, a.Width, 1, termbox.Cell{Ch: '─'})
+	fill(left, top, a.Width, 1, termbox.Cell{Ch: '─'})
+	fill(left, bottom, a.Width, 1, termbox.Cell{Ch: '─'})
 }
 
-func renderScore(midX, bottom, s int) {
+func renderScore(left, bottom, s int) {
 	score := fmt.Sprintf("Score: %v", s)
-	tbprint(midX-1, bottom+1, defaultColor, defaultColor, score)
+	tbprint(left, bottom+1, defaultColor, defaultColor, score)
 }
 
-func renderTitle(midX, top int) {
-	tbprint(midX-1, top-1, defaultColor, defaultColor, "Snake Game")
+func renderQuitMessage(right, bottom int) {
+	m := "Press ESC to quit"
+	tbprint(right-17, bottom+1, defaultColor, defaultColor, m)
+}
+
+func renderTitle(left, top int) {
+	tbprint(left, top-1, defaultColor, defaultColor, "Snake Game")
 }
 
 func fill(x, y, w, h int, cell termbox.Cell) {

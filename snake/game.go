@@ -1,20 +1,21 @@
 package snake
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/nsf/termbox-go"
 )
 
 var (
-	pointsChan = make(chan int)
-	movesChan  = make(chan int)
+	pointsChan  = make(chan int)
+	movesChan   = make(chan int)
+	endGameChan = make(chan bool)
 )
 
 type Game struct {
-	Arena *Arena
-	Score int
+	Arena  *Arena
+	Score  int
+	IsOver bool
 }
 
 func NewGame() *Game {
@@ -24,8 +25,7 @@ func NewGame() *Game {
 }
 
 func (g *Game) end() {
-	fmt.Println("Game Over")
-	fmt.Printf("Score: %v", g.Score)
+	g.IsOver = true
 }
 
 func (g *Game) moveInterval() time.Duration {
@@ -43,7 +43,7 @@ func (g *Game) Start() {
 	initTermbox()
 	defer termbox.Close()
 
-	go listenToKeyboard(movesChan)
+	go listenToKeyboard(movesChan, endGameChan)
 
 	g.render()
 
@@ -54,14 +54,19 @@ mainloop:
 			g.Arena.Snake.changeDirection(d)
 		case p := <-pointsChan:
 			g.Score += p
+		case <-endGameChan:
+			break mainloop
 		default:
-			if err := g.Arena.moveSnake(); err != nil {
-				g.end()
-				break mainloop
+			if !g.IsOver {
+				if err := g.Arena.moveSnake(); err != nil {
+					g.end()
+				}
 			}
+
 			if err := g.render(); err != nil {
 				panic(err)
 			}
+
 			time.Sleep(g.moveInterval())
 		}
 	}
