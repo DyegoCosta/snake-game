@@ -8,8 +8,8 @@ import (
 
 var (
 	pointsChan  = make(chan int)
-	movesChan   = make(chan int)
 	endGameChan = make(chan bool)
+	movesChan   = make(chan Direction)
 )
 
 type Game struct {

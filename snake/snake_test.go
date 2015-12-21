@@ -2,7 +2,7 @@ package snake
 
 import "testing"
 
-func NewDoubleSnake(d int) *Snake {
+func NewDoubleSnake(d Direction) *Snake {
 	return newSnake(d, []Coord{
 		Coord{X: 1, Y: 0},
 		Coord{X: 1, Y: 1},

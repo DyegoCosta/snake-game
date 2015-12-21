@@ -3,19 +3,21 @@ package snake
 import "errors"
 
 const (
-	RIGHT = 1 + iota
+	RIGHT Direction = 1 + iota
 	LEFT
 	UP
 	DOWN
 )
 
+type Direction int
+
 type Snake struct {
 	Body      []Coord
-	Direction int
+	Direction Direction
 	Length    int
 }
 
-func newSnake(d int, b []Coord) *Snake {
+func newSnake(d Direction, b []Coord) *Snake {
 	return &Snake{
 		Length:    len(b),
 		Body:      b,
@@ -23,8 +25,13 @@ func newSnake(d int, b []Coord) *Snake {
 	}
 }
 
-func (s *Snake) changeDirection(d int) {
-	opposites := map[int]int{RIGHT: LEFT, LEFT: RIGHT, UP: DOWN, DOWN: UP}
+func (s *Snake) changeDirection(d Direction) {
+	opposites := map[Direction]Direction{
+		RIGHT: LEFT,
+		LEFT:  RIGHT,
+		UP:    DOWN,
+		DOWN:  UP,
+	}
 
 	if o := opposites[d]; o != 0 && o != s.Direction {
 		s.Direction = d

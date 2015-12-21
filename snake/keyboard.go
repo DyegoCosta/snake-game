@@ -2,7 +2,7 @@ package snake
 
 import "github.com/nsf/termbox-go"
 
-func listenToKeyboard(moves chan int, end chan bool) {
+func listenToKeyboard(moves chan Direction, end chan bool) {
 	termbox.SetInputMode(termbox.InputEsc)
 
 	for {
