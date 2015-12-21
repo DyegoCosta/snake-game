@@ -1,4 +1,4 @@
-package snake
+package main
 
 import "math/rand"
 
