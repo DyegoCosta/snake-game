@@ -3,80 +3,80 @@ package main
 import "errors"
 
 const (
-	RIGHT Direction = 1 + iota
+	RIGHT direction = 1 + iota
 	LEFT
 	UP
 	DOWN
 )
 
-type Direction int
+type direction int
 
-type Snake struct {
-	Body      []Coord
-	Direction Direction
-	Length    int
+type snake struct {
+	body      []coord
+	direction direction
+	length    int
 }
 
-func newSnake(d Direction, b []Coord) *Snake {
-	return &Snake{
-		Length:    len(b),
-		Body:      b,
-		Direction: d,
+func newSnake(d direction, b []coord) *snake {
+	return &snake{
+		length:    len(b),
+		body:      b,
+		direction: d,
 	}
 }
 
-func (s *Snake) changeDirection(d Direction) {
-	opposites := map[Direction]Direction{
+func (s *snake) changeDirection(d direction) {
+	opposites := map[direction]direction{
 		RIGHT: LEFT,
 		LEFT:  RIGHT,
 		UP:    DOWN,
 		DOWN:  UP,
 	}
 
-	if o := opposites[d]; o != 0 && o != s.Direction {
-		s.Direction = d
+	if o := opposites[d]; o != 0 && o != s.direction {
+		s.direction = d
 	}
 }
 
-func (s *Snake) head() Coord {
-	return s.Body[len(s.Body)-1]
+func (s *snake) head() coord {
+	return s.body[len(s.body)-1]
 }
 
-func (s *Snake) die() error {
+func (s *snake) die() error {
 	return errors.New("Died")
 }
 
-func (s *Snake) move() error {
+func (s *snake) move() error {
 	h := s.head()
-	c := Coord{X: h.X, Y: h.Y}
+	c := coord{x: h.x, y: h.y}
 
-	switch s.Direction {
+	switch s.direction {
 	case RIGHT:
-		c.X += 1
+		c.x += 1
 	case LEFT:
-		c.X -= 1
+		c.x -= 1
 	case UP:
-		c.Y += 1
+		c.y += 1
 	case DOWN:
-		c.Y -= 1
+		c.y -= 1
 	}
 
 	if s.isOnPosition(c) {
 		return s.die()
 	}
 
-	if s.Length > len(s.Body) {
-		s.Body = append(s.Body, c)
+	if s.length > len(s.body) {
+		s.body = append(s.body, c)
 	} else {
-		s.Body = append(s.Body[1:], c)
+		s.body = append(s.body[1:], c)
 	}
 
 	return nil
 }
 
-func (s *Snake) isOnPosition(c Coord) bool {
-	for _, b := range s.Body {
-		if b.X == c.X && b.Y == c.Y {
+func (s *snake) isOnPosition(c coord) bool {
+	for _, b := range s.body {
+		if b.x == c.x && b.y == c.y {
 			return true
 		}
 	}

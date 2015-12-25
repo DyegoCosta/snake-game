@@ -2,20 +2,20 @@ package main
 
 import "math/rand"
 
-type Arena struct {
-	Food       *Food
-	Snake      *Snake
-	hasFood    func(*Arena, Coord) bool
-	Height     int
-	Width      int
+type arena struct {
+	food       *food
+	snake      *snake
+	hasFood    func(*arena, coord) bool
+	height     int
+	width      int
 	pointsChan chan (int)
 }
 
-func newArena(s *Snake, p chan (int), h, w int) *Arena {
-	a := &Arena{
-		Snake:      s,
-		Height:     h,
-		Width:      w,
+func newArena(s *snake, p chan (int), h, w int) *arena {
+	a := &arena{
+		snake:      s,
+		height:     h,
+		width:      w,
 		pointsChan: p,
 		hasFood:    hasFood,
 	}
@@ -25,52 +25,52 @@ func newArena(s *Snake, p chan (int), h, w int) *Arena {
 	return a
 }
 
-func (a *Arena) moveSnake() error {
-	if err := a.Snake.move(); err != nil {
+func (a *arena) moveSnake() error {
+	if err := a.snake.move(); err != nil {
 		return err
 	}
 
 	if a.snakeLeftArena() {
-		return a.Snake.die()
+		return a.snake.die()
 	}
 
-	if a.hasFood(a, a.Snake.head()) {
-		go a.addPoints(a.Food.Points)
-		a.Snake.Length++
+	if a.hasFood(a, a.snake.head()) {
+		go a.addPoints(a.food.points)
+		a.snake.length++
 		a.placeFood()
 	}
 
 	return nil
 }
 
-func (a *Arena) snakeLeftArena() bool {
-	h := a.Snake.head()
-	return h.X > a.Width || h.Y > a.Height || h.X < 0 || h.Y < 0
+func (a *arena) snakeLeftArena() bool {
+	h := a.snake.head()
+	return h.x > a.width || h.y > a.height || h.x < 0 || h.y < 0
 }
 
-func (a *Arena) addPoints(p int) {
+func (a *arena) addPoints(p int) {
 	a.pointsChan <- p
 }
 
-func (a *Arena) placeFood() {
+func (a *arena) placeFood() {
 	var x, y int
 
 	for {
-		x = rand.Intn(a.Width)
-		y = rand.Intn(a.Height)
+		x = rand.Intn(a.width)
+		y = rand.Intn(a.height)
 
-		if !a.isOccupied(Coord{X: x, Y: y}) {
+		if !a.isOccupied(coord{x: x, y: y}) {
 			break
 		}
 	}
 
-	a.Food = NewFood(x, y)
+	a.food = newFood(x, y)
 }
 
-func hasFood(a *Arena, c Coord) bool {
-	return c.X == a.Food.X && c.Y == a.Food.Y
+func hasFood(a *arena, c coord) bool {
+	return c.x == a.food.x && c.y == a.food.y
 }
 
-func (a *Arena) isOccupied(c Coord) bool {
-	return a.Snake.isOnPosition(c)
+func (a *arena) isOccupied(c coord) bool {
+	return a.snake.isOnPosition(c)
 }

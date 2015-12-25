@@ -2,20 +2,20 @@ package main
 
 import "github.com/nsf/termbox-go"
 
-type KeyboardEventType int
+type keyboardEventType int
 
 const (
-	MOVE KeyboardEventType = 1 + iota
+	MOVE keyboardEventType = 1 + iota
 	RETRY
 	END
 )
 
-type KeyboardEvent struct {
-	Type KeyboardEventType
-	Key  termbox.Key
+type keyboardEvent struct {
+	eventType keyboardEventType
+	key       termbox.Key
 }
 
-func keyToDirection(k termbox.Key) Direction {
+func keyToDirection(k termbox.Key) direction {
 	switch k {
 	case termbox.KeyArrowLeft:
 		return LEFT
@@ -30,7 +30,7 @@ func keyToDirection(k termbox.Key) Direction {
 	}
 }
 
-func listenToKeyboard(evChan chan KeyboardEvent) {
+func listenToKeyboard(evChan chan keyboardEvent) {
 	termbox.SetInputMode(termbox.InputEsc)
 
 	for {
@@ -38,18 +38,18 @@ func listenToKeyboard(evChan chan KeyboardEvent) {
 		case termbox.EventKey:
 			switch ev.Key {
 			case termbox.KeyArrowLeft:
-				evChan <- KeyboardEvent{Type: MOVE, Key: ev.Key}
+				evChan <- keyboardEvent{eventType: MOVE, key: ev.Key}
 			case termbox.KeyArrowDown:
-				evChan <- KeyboardEvent{Type: MOVE, Key: ev.Key}
+				evChan <- keyboardEvent{eventType: MOVE, key: ev.Key}
 			case termbox.KeyArrowRight:
-				evChan <- KeyboardEvent{Type: MOVE, Key: ev.Key}
+				evChan <- keyboardEvent{eventType: MOVE, key: ev.Key}
 			case termbox.KeyArrowUp:
-				evChan <- KeyboardEvent{Type: MOVE, Key: ev.Key}
+				evChan <- keyboardEvent{eventType: MOVE, key: ev.Key}
 			case termbox.KeyEsc:
-				evChan <- KeyboardEvent{Type: END, Key: ev.Key}
+				evChan <- keyboardEvent{eventType: END, key: ev.Key}
 			default:
 				if ev.Ch == 'r' {
-					evChan <- KeyboardEvent{Type: RETRY, Key: ev.Key}
+					evChan <- keyboardEvent{eventType: RETRY, key: ev.Key}
 				}
 			}
 		case termbox.EventError:

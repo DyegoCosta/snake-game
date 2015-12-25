@@ -2,106 +2,106 @@ package main
 
 import "testing"
 
-func NewDoubleSnake(d Direction) *Snake {
-	return newSnake(d, []Coord{
-		Coord{X: 1, Y: 0},
-		Coord{X: 1, Y: 1},
-		Coord{X: 1, Y: 2},
-		Coord{X: 1, Y: 3},
-		Coord{X: 1, Y: 4},
+func newDoubleSnake(d direction) *snake {
+	return newSnake(d, []coord{
+		coord{x: 1, y: 0},
+		coord{x: 1, y: 1},
+		coord{x: 1, y: 2},
+		coord{x: 1, y: 3},
+		coord{x: 1, y: 4},
 	})
 }
 
 func TestSnakeBodyMove(t *testing.T) {
-	snake := NewDoubleSnake(RIGHT)
+	snake := newDoubleSnake(RIGHT)
 	snake.move()
 
-	if snake.Body[0].X != 1 || snake.Body[0].Y != 1 {
-		t.Fatalf("Invalid body position %x", snake.Body[0])
+	if snake.body[0].x != 1 || snake.body[0].y != 1 {
+		t.Fatalf("Invalid body position %x", snake.body[0])
 	}
 
-	if snake.Body[1].X != 1 || snake.Body[1].Y != 2 {
-		t.Fatalf("Invalid body position %x", snake.Body[1])
+	if snake.body[1].x != 1 || snake.body[1].y != 2 {
+		t.Fatalf("Invalid body position %x", snake.body[1])
 	}
 
-	if snake.Body[2].X != 1 || snake.Body[2].Y != 3 {
-		t.Fatalf("Invalid body position %x", snake.Body[2])
+	if snake.body[2].x != 1 || snake.body[2].y != 3 {
+		t.Fatalf("Invalid body position %x", snake.body[2])
 	}
 
-	if snake.Body[3].X != 1 || snake.Body[3].Y != 4 {
-		t.Fatalf("Invalid body position %x", snake.Body[3])
+	if snake.body[3].x != 1 || snake.body[3].y != 4 {
+		t.Fatalf("Invalid body position %x", snake.body[3])
 	}
 
-	if snake.Body[4].X != 2 || snake.Body[4].Y != 4 {
-		t.Fatalf("Invalid body position %x", snake.Body[4])
+	if snake.body[4].x != 2 || snake.body[4].y != 4 {
+		t.Fatalf("Invalid body position %x", snake.body[4])
 	}
 }
 
 func TestSnakeHeadMoveRight(t *testing.T) {
-	snake := NewDoubleSnake(RIGHT)
+	snake := newDoubleSnake(RIGHT)
 	snake.move()
 
-	if snake.head().X != 2 || snake.head().Y != 4 {
+	if snake.head().x != 2 || snake.head().y != 4 {
 		t.Fatalf("Expected head to have moved to position [2 4], got %x", snake.head())
 	}
 }
 
 func TestSnakeHeadMoveUp(t *testing.T) {
-	snake := NewDoubleSnake(UP)
+	snake := newDoubleSnake(UP)
 	snake.move()
 
-	if snake.head().X != 1 || snake.head().Y != 5 {
+	if snake.head().x != 1 || snake.head().y != 5 {
 		t.Fatalf("Expected head to have moved to position [1 5], got %x", snake.head())
 	}
 }
 
 func TestSnakeHeadMoveDown(t *testing.T) {
-	snake := NewDoubleSnake(RIGHT)
+	snake := newDoubleSnake(RIGHT)
 	snake.move()
 
 	snake.changeDirection(DOWN)
 	snake.move()
 
-	if snake.head().X != 2 || snake.head().Y != 3 {
+	if snake.head().x != 2 || snake.head().y != 3 {
 		t.Fatalf("Expected head to have moved to position [2 3], got %x", snake.head())
 	}
 }
 
 func TestSnakeHeadMoveLeft(t *testing.T) {
-	snake := NewDoubleSnake(LEFT)
+	snake := newDoubleSnake(LEFT)
 	snake.move()
 
-	if snake.head().X != 0 || snake.head().Y != 4 {
+	if snake.head().x != 0 || snake.head().y != 4 {
 		t.Fatalf("Expected head to have moved to position [0 4], got %x", snake.head())
 	}
 }
 
 func TestChangeDirectionToNotOposity(t *testing.T) {
-	snake := NewDoubleSnake(DOWN)
+	snake := newDoubleSnake(DOWN)
 	snake.changeDirection(RIGHT)
-	if snake.Direction != RIGHT {
+	if snake.direction != RIGHT {
 		t.Fatal("Expected to change Snake Direction to DOWN")
 	}
 }
 
 func TestChangeDirectionToOposity(t *testing.T) {
-	snake := NewDoubleSnake(RIGHT)
+	snake := newDoubleSnake(RIGHT)
 	snake.changeDirection(LEFT)
-	if snake.Direction == LEFT {
+	if snake.direction == LEFT {
 		t.Fatal("Expected not to have changed Snake Direction to LEFT")
 	}
 }
 
 func TestChangeDirectionToInvalidDirection(t *testing.T) {
-	snake := NewDoubleSnake(RIGHT)
+	snake := newDoubleSnake(RIGHT)
 	snake.changeDirection(5)
-	if snake.Direction != RIGHT {
+	if snake.direction != RIGHT {
 		t.Fatal("Expected not to have changed Snake Direction")
 	}
 }
 
 func TestSnakeDie(t *testing.T) {
-	snake := NewDoubleSnake(RIGHT)
+	snake := newDoubleSnake(RIGHT)
 
 	if err := snake.die(); err.Error() != "Died" {
 		t.Fatal("Expected Snake die() to return error")
@@ -109,7 +109,7 @@ func TestSnakeDie(t *testing.T) {
 }
 
 func TestSnakeDieWhenMoveOnTopOfItself(t *testing.T) {
-	snake := NewDoubleSnake(RIGHT)
+	snake := newDoubleSnake(RIGHT)
 	snake.move()
 
 	snake.changeDirection(DOWN)

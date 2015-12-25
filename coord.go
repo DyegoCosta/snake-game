@@ -1,5 +1,5 @@
 package main
 
-type Coord struct {
-	X, Y int
+type coord struct {
+	x, y int
 }

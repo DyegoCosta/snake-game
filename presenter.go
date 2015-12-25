@@ -13,51 +13,51 @@ const (
 	snakeColor   = termbox.ColorGreen
 )
 
-func (g *Game) render() error {
+func (g *game) render() error {
 	termbox.Clear(defaultColor, defaultColor)
 
 	var (
 		w, h   = termbox.Size()
 		midY   = h / 2
-		left   = (w - g.Arena.Width) / 2
-		right  = (w + g.Arena.Width) / 2
-		top    = midY - (g.Arena.Height / 2)
-		bottom = midY + (g.Arena.Height / 2) + 1
+		left   = (w - g.arena.width) / 2
+		right  = (w + g.arena.width) / 2
+		top    = midY - (g.arena.height / 2)
+		bottom = midY + (g.arena.height / 2) + 1
 	)
 
 	renderTitle(left, top)
-	renderArena(g.Arena, top, bottom, left)
-	renderSnake(left, bottom, g.Arena.Snake)
-	renderFood(left, bottom, g.Arena.Food)
-	renderScore(left, bottom, g.Score)
+	renderArena(g.arena, top, bottom, left)
+	renderSnake(left, bottom, g.arena.snake)
+	renderFood(left, bottom, g.arena.food)
+	renderScore(left, bottom, g.score)
 	renderQuitMessage(right, bottom)
 
 	return termbox.Flush()
 }
 
-func renderSnake(left, bottom int, s *Snake) {
-	for _, b := range s.Body {
-		termbox.SetCell(left+b.X, bottom-b.Y, ' ', snakeColor, snakeColor)
+func renderSnake(left, bottom int, s *snake) {
+	for _, b := range s.body {
+		termbox.SetCell(left+b.x, bottom-b.y, ' ', snakeColor, snakeColor)
 	}
 }
 
-func renderFood(left, bottom int, f *Food) {
-	termbox.SetCell(left+f.X, bottom-f.Y, f.Emoji, defaultColor, bgColor)
+func renderFood(left, bottom int, f *food) {
+	termbox.SetCell(left+f.x, bottom-f.y, f.emoji, defaultColor, bgColor)
 }
 
-func renderArena(a *Arena, top, bottom, left int) {
+func renderArena(a *arena, top, bottom, left int) {
 	for i := top; i < bottom; i++ {
 		termbox.SetCell(left-1, i, '│', defaultColor, bgColor)
-		termbox.SetCell(left+a.Width, i, '│', defaultColor, bgColor)
+		termbox.SetCell(left+a.width, i, '│', defaultColor, bgColor)
 	}
 
 	termbox.SetCell(left-1, top, '┌', defaultColor, bgColor)
 	termbox.SetCell(left-1, bottom, '└', defaultColor, bgColor)
-	termbox.SetCell(left+a.Width, top, '┐', defaultColor, bgColor)
-	termbox.SetCell(left+a.Width, bottom, '┘', defaultColor, bgColor)
+	termbox.SetCell(left+a.width, top, '┐', defaultColor, bgColor)
+	termbox.SetCell(left+a.width, bottom, '┘', defaultColor, bgColor)
 
-	fill(left, top, a.Width, 1, termbox.Cell{Ch: '─'})
-	fill(left, bottom, a.Width, 1, termbox.Cell{Ch: '─'})
+	fill(left, top, a.width, 1, termbox.Cell{Ch: '─'})
+	fill(left, bottom, a.width, 1, termbox.Cell{Ch: '─'})
 }
 
 func renderScore(left, bottom, s int) {

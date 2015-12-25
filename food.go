@@ -2,17 +2,17 @@ package main
 
 import "math/rand"
 
-type Food struct {
-	Emoji        rune
-	Points, X, Y int
+type food struct {
+	emoji        rune
+	points, x, y int
 }
 
-func NewFood(x, y int) *Food {
-	return &Food{
-		Points: 10,
-		Emoji:  randomFoodEmoji(),
-		X:      x,
-		Y:      y,
+func newFood(x, y int) *food {
+	return &food{
+		points: 10,
+		emoji:  randomFoodEmoji(),
+		x:      x,
+		y:      y,
 	}
 }
 

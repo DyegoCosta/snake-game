@@ -8,21 +8,21 @@ import (
 
 var (
 	pointsChan         = make(chan int)
-	keyboardEventsChan = make(chan KeyboardEvent)
+	keyboardEventsChan = make(chan keyboardEvent)
 )
 
-type Game struct {
-	Arena  *Arena
-	Score  int
-	IsOver bool
+type game struct {
+	arena  *arena
+	score  int
+	isOver bool
 }
 
-func initialSnake() *Snake {
-	return newSnake(RIGHT, []Coord{
-		Coord{X: 1, Y: 1},
-		Coord{X: 1, Y: 2},
-		Coord{X: 1, Y: 3},
-		Coord{X: 1, Y: 4},
+func initialSnake() *snake {
+	return newSnake(RIGHT, []coord{
+		coord{x: 1, y: 1},
+		coord{x: 1, y: 2},
+		coord{x: 1, y: 3},
+		coord{x: 1, y: 4},
 	})
 }
 
@@ -30,34 +30,34 @@ func initialScore() int {
 	return 0
 }
 
-func initialArena() *Arena {
+func initialArena() *arena {
 	return newArena(initialSnake(), pointsChan, 20, 50)
 }
 
-func (g *Game) end() {
-	g.IsOver = true
+func (g *game) end() {
+	g.isOver = true
 }
 
-func (g *Game) moveInterval() time.Duration {
-	ms := 100 - (g.Score / 10)
+func (g *game) moveInterval() time.Duration {
+	ms := 100 - (g.score / 10)
 	return time.Duration(ms) * time.Millisecond
 }
 
-func (g *Game) retry() {
-	g.Arena = initialArena()
-	g.Score = initialScore()
-	g.IsOver = false
+func (g *game) retry() {
+	g.arena = initialArena()
+	g.score = initialScore()
+	g.isOver = false
 }
 
-func (g *Game) addPoints(p int) {
-	g.Score += p
+func (g *game) addPoints(p int) {
+	g.score += p
 }
 
-func NewGame() *Game {
-	return &Game{Arena: initialArena(), Score: initialScore()}
+func NewGame() *game {
+	return &game{arena: initialArena(), score: initialScore()}
 }
 
-func (g *Game) Start() {
+func (g *game) Start() {
 	if err := termbox.Init(); err != nil {
 		panic(err)
 	}
@@ -75,18 +75,18 @@ mainloop:
 		case p := <-pointsChan:
 			g.addPoints(p)
 		case e := <-keyboardEventsChan:
-			switch e.Type {
+			switch e.eventType {
 			case MOVE:
-				d := keyToDirection(e.Key)
-				g.Arena.Snake.changeDirection(d)
+				d := keyToDirection(e.key)
+				g.arena.snake.changeDirection(d)
 			case RETRY:
 				g.retry()
 			case END:
 				break mainloop
 			}
 		default:
-			if !g.IsOver {
-				if err := g.Arena.moveSnake(); err != nil {
+			if !g.isOver {
+				if err := g.arena.moveSnake(); err != nil {
 					g.end()
 				}
 			}
