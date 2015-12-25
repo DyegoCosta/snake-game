@@ -7,9 +7,8 @@ import (
 )
 
 var (
-	pointsChan  = make(chan int)
-	endGameChan = make(chan bool)
-	movesChan   = make(chan Direction)
+	pointsChan         = make(chan int)
+	keyboardEventsChan = make(chan KeyboardEvent)
 )
 
 type Game struct {
@@ -18,17 +17,21 @@ type Game struct {
 	IsOver bool
 }
 
-func NewGame() *Game {
-	s := newSnake(RIGHT, []Coord{
+func initialSnake() *Snake {
+	return newSnake(RIGHT, []Coord{
 		Coord{X: 1, Y: 1},
 		Coord{X: 1, Y: 2},
 		Coord{X: 1, Y: 3},
 		Coord{X: 1, Y: 4},
 	})
+}
 
-	a := newArena(s, pointsChan, 20, 50)
+func initialScore() int {
+	return 0
+}
 
-	return &Game{Arena: a, Score: 0}
+func initialArena() *Arena {
+	return newArena(initialSnake(), pointsChan, 20, 50)
 }
 
 func (g *Game) end() {
@@ -40,17 +43,27 @@ func (g *Game) moveInterval() time.Duration {
 	return time.Duration(ms) * time.Millisecond
 }
 
-func initTermbox() {
-	if err := termbox.Init(); err != nil {
-		panic(err)
-	}
+func (g *Game) retry() {
+	g.Arena = initialArena()
+	g.Score = initialScore()
+	g.IsOver = false
+}
+
+func (g *Game) addPoints(p int) {
+	g.Score += p
+}
+
+func NewGame() *Game {
+	return &Game{Arena: initialArena(), Score: initialScore()}
 }
 
 func (g *Game) Start() {
-	initTermbox()
+	if err := termbox.Init(); err != nil {
+		panic(err)
+	}
 	defer termbox.Close()
 
-	go listenToKeyboard(movesChan, endGameChan)
+	go listenToKeyboard(keyboardEventsChan)
 
 	if err := g.render(); err != nil {
 		panic(err)
@@ -59,12 +72,18 @@ func (g *Game) Start() {
 mainloop:
 	for {
 		select {
-		case d := <-movesChan:
-			g.Arena.Snake.changeDirection(d)
 		case p := <-pointsChan:
-			g.Score += p
-		case <-endGameChan:
-			break mainloop
+			g.addPoints(p)
+		case e := <-keyboardEventsChan:
+			switch e.Type {
+			case MOVE:
+				d := keyToDirection(e.Key)
+				g.Arena.Snake.changeDirection(d)
+			case RETRY:
+				g.retry()
+			case END:
+				break mainloop
+			}
 		default:
 			if !g.IsOver {
 				if err := g.Arena.moveSnake(); err != nil {

@@ -2,7 +2,35 @@ package main
 
 import "github.com/nsf/termbox-go"
 
-func listenToKeyboard(moves chan Direction, end chan bool) {
+type KeyboardEventType int
+
+const (
+	MOVE KeyboardEventType = 1 + iota
+	RETRY
+	END
+)
+
+type KeyboardEvent struct {
+	Type KeyboardEventType
+	Key  termbox.Key
+}
+
+func keyToDirection(k termbox.Key) Direction {
+	switch k {
+	case termbox.KeyArrowLeft:
+		return LEFT
+	case termbox.KeyArrowDown:
+		return DOWN
+	case termbox.KeyArrowRight:
+		return RIGHT
+	case termbox.KeyArrowUp:
+		return UP
+	default:
+		return 0
+	}
+}
+
+func listenToKeyboard(evChan chan KeyboardEvent) {
 	termbox.SetInputMode(termbox.InputEsc)
 
 	for {
@@ -10,15 +38,19 @@ func listenToKeyboard(moves chan Direction, end chan bool) {
 		case termbox.EventKey:
 			switch ev.Key {
 			case termbox.KeyArrowLeft:
-				moves <- LEFT
+				evChan <- KeyboardEvent{Type: MOVE, Key: ev.Key}
 			case termbox.KeyArrowDown:
-				moves <- DOWN
+				evChan <- KeyboardEvent{Type: MOVE, Key: ev.Key}
 			case termbox.KeyArrowRight:
-				moves <- RIGHT
+				evChan <- KeyboardEvent{Type: MOVE, Key: ev.Key}
 			case termbox.KeyArrowUp:
-				moves <- UP
+				evChan <- KeyboardEvent{Type: MOVE, Key: ev.Key}
 			case termbox.KeyEsc:
-				end <- true
+				evChan <- KeyboardEvent{Type: END, Key: ev.Key}
+			default:
+				if ev.Ch == 'r' {
+					evChan <- KeyboardEvent{Type: RETRY, Key: ev.Key}
+				}
 			}
 		case termbox.EventError:
 			panic(ev.Err)
