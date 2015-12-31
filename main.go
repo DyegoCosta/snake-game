@@ -2,10 +2,9 @@ package main
 
 import "flag"
 
-var cutefood bool
+var cutefood = true
 
 func main() {
-
 	flag.BoolVar(&cutefood, "cutefood", true, "display a cute character as food")
 	flag.Parse()
 
