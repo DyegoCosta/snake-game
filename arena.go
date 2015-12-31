@@ -64,7 +64,11 @@ func (a *arena) placeFood() {
 		}
 	}
 
-	a.food = newFood(x, y)
+	if cutefood {
+		a.food = newCuteFood(x, y)
+	} else {
+		a.food = newBoringFood(x, y)
+	}
 }
 
 func hasFood(a *arena, c coord) bool {
