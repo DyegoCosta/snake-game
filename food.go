@@ -1,6 +1,10 @@
 package main
 
-import "math/rand"
+import (
+	"math/rand"
+	"os"
+	"strings"
+)
 
 type food struct {
 	emoji        rune
@@ -10,9 +14,17 @@ type food struct {
 func newFood(x, y int) *food {
 	return &food{
 		points: 10,
-		emoji:  randomFoodEmoji(),
+		emoji:  getFoodEmoji(),
 		x:      x,
 		y:      y,
+	}
+}
+
+func getFoodEmoji() rune {
+	if hasUnicodeSupport() {
+		return randomFoodEmoji()
+	} else {
+		return '@'
 	}
 }
 
@@ -36,4 +48,8 @@ func randomFoodEmoji() rune {
 	}
 
 	return f[rand.Intn(len(f))]
+}
+
+func hasUnicodeSupport() bool {
+	return strings.Contains(os.Getenv("LANG"), "UTF-8")
 }

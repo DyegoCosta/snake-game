@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"testing"
 )
 
@@ -17,5 +18,15 @@ func TestFoodEmoji(t *testing.T) {
 
 	if string(f.emoji) == "" {
 		t.Fatal("Food emoji not expected to be blank")
+	}
+}
+
+func TestFoodFallback(t *testing.T) {
+	os.Setenv("LANG", "c")
+
+	f := newFood(10, 10)
+
+	if string(f.emoji) != "@" {
+		t.Fatal("Food emoji expected to be '@'")
 	}
 }
