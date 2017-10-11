@@ -23,9 +23,9 @@ func newFood(x, y int) *food {
 func getFoodEmoji() rune {
 	if hasUnicodeSupport() {
 		return randomFoodEmoji()
-	} else {
-		return '@'
 	}
+
+	return '@'
 }
 
 func randomFoodEmoji() rune {

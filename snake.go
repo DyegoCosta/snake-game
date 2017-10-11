@@ -3,9 +3,13 @@ package main
 import "errors"
 
 const (
+	// RIGHT const
 	RIGHT direction = 1 + iota
+	// LEFT const
 	LEFT
+	// UP const
 	UP
+	// DOWN const
 	DOWN
 )
 
@@ -52,13 +56,13 @@ func (s *snake) move() error {
 
 	switch s.direction {
 	case RIGHT:
-		c.x += 1
+		c.x++
 	case LEFT:
-		c.x -= 1
+		c.x--
 	case UP:
-		c.y += 1
+		c.y++
 	case DOWN:
-		c.y -= 1
+		c.y--
 	}
 
 	if s.isOnPosition(c) {

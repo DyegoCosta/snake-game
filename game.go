@@ -53,10 +53,12 @@ func (g *game) addPoints(p int) {
 	g.score += p
 }
 
+// NewGame creates new game object
 func NewGame() *game {
 	return &game{arena: initialArena(), score: initialScore()}
 }
 
+// Start inits termbox and starts keyboard listening
 func (g *game) Start() {
 	if err := termbox.Init(); err != nil {
 		panic(err)
