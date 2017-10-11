@@ -5,8 +5,11 @@ import "github.com/nsf/termbox-go"
 type keyboardEventType int
 
 const (
+	// MOVE keyboard event
 	MOVE keyboardEventType = 1 + iota
+	// RETRY keyboard event
 	RETRY
+	// END keyboard event
 	END
 )
 
