@@ -15,15 +15,24 @@ type game struct {
 	arena  *arena
 	score  int
 	isOver bool
+	chance int
 }
 
-func initialSnake() *snake {
-	return newSnake(RIGHT, []coord{
-		coord{x: 1, y: 1},
-		coord{x: 1, y: 2},
-		coord{x: 1, y: 3},
-		coord{x: 1, y: 4},
-	})
+func initialSnake(snakeSize int) *snake {
+	if snakeSize > 4 {
+		cr := []coord{}
+		for i := 0; i < snakeSize; i++ {
+			cr = append(cr, coord{x: 1, y: i + 1})
+		}
+		return newSnake(RIGHT, cr)
+	} else {
+		return newSnake(RIGHT, []coord{
+			coord{x: 1, y: 1},
+			coord{x: 1, y: 2},
+			coord{x: 1, y: 3},
+			coord{x: 1, y: 4},
+		})
+	}
 }
 
 func initialScore() int {
@@ -31,11 +40,24 @@ func initialScore() int {
 }
 
 func initialArena() *arena {
-	return newArena(initialSnake(), pointsChan, 20, 50)
+	return newArena(initialSnake(4), pointsChan, 20, 50)
+}
+
+func initialChance() int {
+	return 3
 }
 
 func (g *game) end() {
-	g.isOver = true
+	if g.chance > 0 {
+		g.chance--
+		if g.chance == 0 {
+			g.isOver = true
+		} else {
+			g.newChance()
+		}
+	} else {
+		g.isOver = true
+	}
 }
 
 func (g *game) moveInterval() time.Duration {
@@ -43,9 +65,14 @@ func (g *game) moveInterval() time.Duration {
 	return time.Duration(ms) * time.Millisecond
 }
 
+func (g *game) newChance() {
+	g.arena = newArena(initialSnake(g.arena.snake.length), pointsChan, 20, 50)
+}
+
 func (g *game) retry() {
 	g.arena = initialArena()
 	g.score = initialScore()
+	g.chance = initialChance()
 	g.isOver = false
 }
 
@@ -54,7 +81,7 @@ func (g *game) addPoints(p int) {
 }
 
 func NewGame() *game {
-	return &game{arena: initialArena(), score: initialScore()}
+	return &game{arena: initialArena(), score: initialScore(), chance: initialChance()}
 }
 
 func (g *game) Start() {
