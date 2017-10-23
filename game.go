@@ -19,20 +19,11 @@ type game struct {
 }
 
 func initialSnake(snakeSize int) *snake {
-	if snakeSize > 4 {
-		cr := []coord{}
-		for i := 0; i < snakeSize; i++ {
-			cr = append(cr, coord{x: 1, y: i + 1})
-		}
-		return newSnake(RIGHT, cr)
-	} else {
-		return newSnake(RIGHT, []coord{
-			coord{x: 1, y: 1},
-			coord{x: 1, y: 2},
-			coord{x: 1, y: 3},
-			coord{x: 1, y: 4},
-		})
+	cr := []coord{}
+	for i := 0; i < snakeSize; i++ {
+		cr = append(cr, coord{x: 1, y: i + 1})
 	}
+	return newSnake(RIGHT, cr)
 }
 
 func initialScore() int {
