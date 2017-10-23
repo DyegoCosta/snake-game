@@ -66,9 +66,9 @@ func renderScore(left, bottom, s int) {
 	tbprint(left, bottom+1, defaultColor, defaultColor, score)
 }
 
-func renderChance(left, bottom, c int) {
+func renderChance(right, top, c int) {
 	chance := fmt.Sprintf("Chance: %v", c)
-	tbprint(left-9, bottom-1, defaultColor, defaultColor, chance)
+	tbprint(right-9, top-1, defaultColor, defaultColor, chance)
 }
 
 func renderQuitMessage(right, bottom int) {
