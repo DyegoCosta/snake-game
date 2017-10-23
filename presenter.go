@@ -30,6 +30,7 @@ func (g *game) render() error {
 	renderSnake(left, bottom, g.arena.snake)
 	renderFood(left, bottom, g.arena.food)
 	renderScore(left, bottom, g.score)
+	renderChance(right, top, g.chance)
 	renderQuitMessage(right, bottom)
 
 	return termbox.Flush()
@@ -63,6 +64,11 @@ func renderArena(a *arena, top, bottom, left int) {
 func renderScore(left, bottom, s int) {
 	score := fmt.Sprintf("Score: %v", s)
 	tbprint(left, bottom+1, defaultColor, defaultColor, score)
+}
+
+func renderChance(right, top, c int) {
+	chance := fmt.Sprintf("Chance: %v", c)
+	tbprint(right-9, top-1, defaultColor, defaultColor, chance)
 }
 
 func renderQuitMessage(right, bottom int) {
