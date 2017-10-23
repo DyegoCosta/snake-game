@@ -59,3 +59,37 @@ func TestRetryGoBackToGameInitialState(t *testing.T) {
 		t.Fatal("Expected Snake direction to have been reset")
 	}
 }
+
+func TestGetMoreChance(t *testing.T) {
+	g := NewGame()
+	initScore := g.score
+	initChance := g.chance
+	initSnakeLength := g.arena.snake.length
+
+	g.arena.snake.changeDirection(UP)
+
+	for i := 1; i <= initChance; i++ {
+		g.arena.moveSnake()
+		g.arena.snake.length++
+		g.addPoints(10)
+		g.end()
+
+		if i < initChance {
+			if g.isOver != false {
+				t.Fatalf("Expected player will get more chance : got %v", g.isOver)
+			}
+
+			if g.score == initScore {
+				t.Fatalf("Expected score will not reset when get more chance : got %v", g.score)
+			}
+
+			if initSnakeLength == g.arena.snake.length {
+				t.Fatalf("Expected snake length not reset when get more chance : got %v", g.arena.snake.length)
+			}
+		} else {
+			if g.isOver == false {
+				t.Fatalf("Expected player won't get more chance : got %v", g.isOver)
+			}
+		}
+	}
+}
