@@ -1,6 +1,7 @@
 package main
 
+import "github.com/DyegoCosta/snake-game/snake"
+
 func main() {
-	g := NewGame()
-	g.Start()
+	snake.NewGame().Start()
 }
