@@ -6,5 +6,8 @@ build:
 run: build
 	./_bin/snake-game
 
+run_on_docker:
+	docker build -t snake-game . && docker run --rm -ti snake-game
+
 test:
 	go test -v ./...

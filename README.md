@@ -8,9 +8,17 @@ Terminal-based Snake game
 
 ## Play
 
+### Locally
+
 ```
 $ go get github.com/DyegoCosta/snake-game
 $ $GOPATH/bin/snake-game
+```
+
+### On Docker
+
+```
+$ docker run -ti dyego/snake-game
 ```
 
 ## Testing
