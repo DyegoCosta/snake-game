@@ -1,6 +1,8 @@
 package snake
 
 import (
+	"crypto/rand"
+	"math/big"
 	"time"
 
 	"github.com/nsf/termbox-go"
@@ -15,6 +17,14 @@ type game struct {
 	arena  *arena
 	score  int
 	isOver bool
+}
+
+func randomInt(max int) int {
+	v, err := rand.Int(rand.Reader, big.NewInt(int64(max)))
+	if err != nil {
+		panic("error getting random number: " + err.Error())
+	}
+	return int(v.Int64())
 }
 
 func initialSnake() *snake {
