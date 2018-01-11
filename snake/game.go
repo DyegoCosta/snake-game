@@ -11,7 +11,8 @@ var (
 	keyboardEventsChan = make(chan keyboardEvent)
 )
 
-type game struct {
+// Game type
+type Game struct {
 	arena  *arena
 	score  int
 	isOver bool
@@ -34,30 +35,32 @@ func initialArena() *arena {
 	return newArena(initialSnake(), pointsChan, 20, 50)
 }
 
-func (g *game) end() {
+func (g *Game) end() {
 	g.isOver = true
 }
 
-func (g *game) moveInterval() time.Duration {
+func (g *Game) moveInterval() time.Duration {
 	ms := 100 - (g.score / 10)
 	return time.Duration(ms) * time.Millisecond
 }
 
-func (g *game) retry() {
+func (g *Game) retry() {
 	g.arena = initialArena()
 	g.score = initialScore()
 	g.isOver = false
 }
 
-func (g *game) addPoints(p int) {
+func (g *Game) addPoints(p int) {
 	g.score += p
 }
 
-func NewGame() *game {
-	return &game{arena: initialArena(), score: initialScore()}
+// NewGame creates new Game object
+func NewGame() *Game {
+	return &Game{arena: initialArena(), score: initialScore()}
 }
 
-func (g *game) Start() {
+// Start starts the game
+func (g *Game) Start() {
 	if err := termbox.Init(); err != nil {
 		panic(err)
 	}
