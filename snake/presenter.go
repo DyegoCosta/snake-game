@@ -13,7 +13,7 @@ const (
 	snakeColor   = termbox.ColorGreen
 )
 
-func (g *game) render() error {
+func (g *Game) render() error {
 	termbox.Clear(defaultColor, defaultColor)
 
 	var (

@@ -2,6 +2,7 @@ package snake
 
 import "errors"
 
+// Allowed snake movement directions
 const (
 	RIGHT direction = 1 + iota
 	LEFT
@@ -52,13 +53,13 @@ func (s *snake) move() error {
 
 	switch s.direction {
 	case RIGHT:
-		c.x += 1
+		c.x++
 	case LEFT:
-		c.x -= 1
+		c.x--
 	case UP:
-		c.y += 1
+		c.y++
 	case DOWN:
-		c.y -= 1
+		c.y--
 	}
 
 	if s.isOnPosition(c) {

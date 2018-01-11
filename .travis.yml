@@ -1,8 +1,13 @@
 language: go
 
 go:
-  - tip
+  - 1.x
 
 install:
   - go get github.com/mattn/go-runewidth
   - go get github.com/nsf/termbox-go
+  - go get github.com/golang/lint/golint
+
+script:
+  - go test -v -race ./...
+  - golint -set_exit_status ./...
