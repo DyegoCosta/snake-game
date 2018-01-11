@@ -1,7 +1,6 @@
 package snake
 
 import (
-	"math/rand"
 	"os"
 	"strings"
 )
@@ -47,7 +46,7 @@ func randomFoodEmoji() rune {
 		'🍪',
 	}
 
-	return f[rand.Intn(len(f))]
+	return f[randomInt(len(f))]
 }
 
 func hasUnicodeSupport() bool {

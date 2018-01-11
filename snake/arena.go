@@ -1,7 +1,5 @@
 package snake
 
-import "math/rand"
-
 type arena struct {
 	food       *food
 	snake      *snake
@@ -56,8 +54,8 @@ func (a *arena) placeFood() {
 	var x, y int
 
 	for {
-		x = rand.Intn(a.width)
-		y = rand.Intn(a.height)
+		x = randomInt(a.width)
+		y = randomInt(a.height)
 
 		if !a.isOccupied(coord{x: x, y: y}) {
 			break
