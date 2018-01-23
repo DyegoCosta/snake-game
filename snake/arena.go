@@ -1,6 +1,9 @@
 package snake
 
-import "math/rand"
+import (
+	"math/rand"
+	"time"
+)
 
 type arena struct {
 	food       *food
@@ -12,6 +15,8 @@ type arena struct {
 }
 
 func newArena(s *snake, p chan (int), h, w int) *arena {
+	rand.Seed(time.Now().UnixNano())
+
 	a := &arena{
 		snake:      s,
 		height:     h,
