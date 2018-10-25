@@ -6,7 +6,7 @@ go:
 install:
   - go get github.com/mattn/go-runewidth
   - go get github.com/nsf/termbox-go
-  - go get github.com/golang/lint/golint
+  - go get golang.org/x/lint/golint
 
 script:
   - go test -v -race ./...
