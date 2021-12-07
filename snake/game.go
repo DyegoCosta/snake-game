@@ -77,6 +77,8 @@ func (g *Game) Start() {
 		panic(err)
 	}
 
+	var isPaused = false
+
 mainloop:
 	for {
 		select {
@@ -88,12 +90,15 @@ mainloop:
 				d := keyToDirection(e.key)
 				g.arena.snake.changeDirection(d)
 			case RETRY:
+				isPaused = false
 				g.retry()
+			case PAUSE:
+				isPaused = !isPaused
 			case END:
 				break mainloop
 			}
 		default:
-			if !g.isOver {
+			if !isPaused && !g.isOver {
 				if err := g.arena.moveSnake(); err != nil {
 					g.end()
 				}
