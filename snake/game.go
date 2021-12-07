@@ -39,9 +39,14 @@ func (g *Game) end() {
 	g.isOver = true
 }
 
-func (g *Game) moveInterval() time.Duration {
+func (g *Game) moveInterval(d direction) time.Duration {
 	ms := 100 - (g.score / 10)
-	return time.Duration(ms) * time.Millisecond
+	dur := time.Duration(ms) * time.Millisecond
+
+	if d == UP || d == DOWN {
+		return dur * 2
+	}
+	return dur
 }
 
 func (g *Game) retry() {
@@ -98,7 +103,7 @@ mainloop:
 				panic(err)
 			}
 
-			time.Sleep(g.moveInterval())
+			time.Sleep(g.moveInterval(g.arena.snake.direction))
 		}
 	}
 }
