@@ -8,6 +8,7 @@ type keyboardEventType int
 const (
 	MOVE keyboardEventType = 1 + iota
 	RETRY
+	PAUSE
 	END
 )
 
@@ -48,6 +49,8 @@ func listenToKeyboard(evChan chan keyboardEvent) {
 				evChan <- keyboardEvent{eventType: MOVE, key: ev.Key}
 			case termbox.KeyEsc:
 				evChan <- keyboardEvent{eventType: END, key: ev.Key}
+			case termbox.KeySpace:
+				evChan <- keyboardEvent{eventType: PAUSE, key: ev.Key}
 			default:
 				if ev.Ch == 'r' {
 					evChan <- keyboardEvent{eventType: RETRY, key: ev.Key}
