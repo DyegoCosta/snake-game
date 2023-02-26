@@ -27,3 +27,4 @@ $ docker run -ti dyego/snake-game
 $ cd $GOPATH/src/github.com/DyegoCosta/snake-game
 $ make
 ```
+[![Run on Repl.it](https://repl.it/badge/github/DyegoCosta/snake-game)](https://repl.it/github/DyegoCosta/snake-game)
