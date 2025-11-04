@@ -1,11 +1,10 @@
-FROM golang:alpine
-ENV LANG en_US.UTF-8
+FROM golang:alpine AS builder
+WORKDIR /app
+COPY . .
+RUN go mod download \
+    && CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /snake-game .
 
-COPY . /go/src/github.com/dyegocosta/snake-game
-WORKDIR /go/src/github.com/dyegocosta/snake-game
-
-RUN apk add --no-cache git
-RUN go get ./
-RUN go build -o ./_bin/snake-game
-
-ENTRYPOINT "./_bin/snake-game"
+FROM scratch
+ENV LANG=en_US.UTF-8
+COPY --from=builder /snake-game /snake-game
+ENTRYPOINT ["/snake-game"]
