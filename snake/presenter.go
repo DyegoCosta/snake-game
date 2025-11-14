@@ -8,9 +8,10 @@ import (
 )
 
 const (
-	defaultColor = termbox.ColorDefault
-	bgColor      = termbox.ColorDefault
-	snakeColor   = termbox.ColorGreen
+	defaultColor   = termbox.ColorDefault
+	bgColor        = termbox.ColorDefault
+	snakeColor     = termbox.ColorGreen
+	snakeHeadColor = termbox.ColorRed
 )
 
 func (g *Game) render() error {
@@ -36,8 +37,14 @@ func (g *Game) render() error {
 }
 
 func renderSnake(left, bottom int, s *snake) {
-	for _, b := range s.body {
-		termbox.SetCell(left+b.x, bottom-b.y, ' ', snakeColor, snakeColor)
+	l := len(s.body)
+
+	for i, b := range s.body {
+		if i == l-1 {
+			termbox.SetCell(left+b.x, bottom-b.y, ' ', snakeHeadColor, snakeHeadColor)
+		} else {
+			termbox.SetCell(left+b.x, bottom-b.y, ' ', snakeColor, snakeColor)
+		}
 	}
 }
 

@@ -39,9 +39,14 @@ func (g *Game) end() {
 	g.isOver = true
 }
 
-func (g *Game) moveInterval() time.Duration {
+func (g *Game) moveInterval(d direction) time.Duration {
 	ms := 100 - (g.score / 10)
-	return time.Duration(ms) * time.Millisecond
+	dur := time.Duration(ms) * time.Millisecond
+
+	if d == UP || d == DOWN {
+		return dur * 2
+	}
+	return dur
 }
 
 func (g *Game) retry() {
@@ -72,6 +77,8 @@ func (g *Game) Start() {
 		panic(err)
 	}
 
+	var isPaused = false
+
 mainloop:
 	for {
 		select {
@@ -83,12 +90,15 @@ mainloop:
 				d := keyToDirection(e.key)
 				g.arena.snake.changeDirection(d)
 			case RETRY:
+				isPaused = false
 				g.retry()
+			case PAUSE:
+				isPaused = !isPaused
 			case END:
 				break mainloop
 			}
 		default:
-			if !g.isOver {
+			if !isPaused && !g.isOver {
 				if err := g.arena.moveSnake(); err != nil {
 					g.end()
 				}
@@ -98,7 +108,7 @@ mainloop:
 				panic(err)
 			}
 
-			time.Sleep(g.moveInterval())
+			time.Sleep(g.moveInterval(g.arena.snake.direction))
 		}
 	}
 }
